@@ -22,13 +22,6 @@ Perché scegliere questa soluzione
 - Facile integrazione: il componente è standalone e può essere incluso in pagine esistenti (es. portali HR, intranet aziendali o come micro-widget).
 - Privacy e costi bassi: tutti i calcoli e la generazione PDF avvengono client-side, evitando costi server e problematiche di gestione dati sensibili.
 
-Possibili miglioramenti (opzionali, roadmap commerciale)
-1) Refactor TypeScript: estrarre la logica di calcolo in un modulo TypeScript (`src/lib`) per test automatizzati e maggiore robustezza.
-2) Internazionalizzazione: supportare più lingue e formati valuta/locale.
-3) Stili e design system: integrazione con Tailwind o design system aziendale per allineamento al brand.
-4) PDF server-side (opzionale): per generare PDF certificati o con firma, integrare una funzione server (lambda) che produce PDF sicuri.
-5) Test & CI: aggiungere test unitari per la logica fiscale e pipeline CI per build/test automatici.
-
 Come provare il progetto (quick start)
 1) Aprire terminale nella cartella `here` del repository.
 2) Eseguire:
