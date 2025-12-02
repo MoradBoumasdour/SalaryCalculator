@@ -16,6 +16,7 @@
     <label for="ral"> Inserisci RAL (€/anno)</label>
     <input id="ral" type="number" min="0" step="100" value="35000" />
     <button id="calcBtn">Calcola</button>
+    <button id="downloadPdfBtn" disabled>Scarica PDF</button>
   </div>
 
   <div id="results" class="result" aria-live="polite" hidden>
@@ -31,6 +32,7 @@
   const el = document.getElementById('salary-calculator');
   const ralInput = el.querySelector('#ral');
   const btn = el.querySelector('#calcBtn');
+  const downloadBtn = el.querySelector('#downloadPdfBtn');
   const results = el.querySelector('#results');
 
   function fmt(v) {
@@ -94,6 +96,7 @@
       <div class="line" style="font-weight:700"><strong>Netto mensile stimato</strong><strong>${fmt(resObj.netMonthly)}</strong></div>
       <div class="muted">Imposta/Trattenute totali: ${ (resObj.effectiveTax*100).toFixed(2) }% della RAL</div>
     `;
+    if (downloadBtn) downloadBtn.disabled = false;
   }
 
   btn.addEventListener('click', () => {
@@ -102,6 +105,40 @@
     render(res);
   });
 
+  // carica dinamicamente html2pdf.js (bundle) da CDN
+  function loadHtml2Pdf() {
+    return new Promise((resolve, reject) => {
+      if (window.html2pdf) return resolve(window.html2pdf);
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js';
+      s.async = true;
+      s.onload = () => resolve(window.html2pdf);
+      s.onerror = () => reject(new Error('Impossibile caricare html2pdf.js'));
+      document.head.appendChild(s);
+    });
+  }
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', async () => {
+      try {
+        await loadHtml2Pdf();
+        const ral = parseFloat(ralInput.value || 0);
+        const filename = `salary-${(isNaN(ral) ? 'calc' : ral)}.pdf`;
+        // genera PDF a partire dall'elemento dei risultati
+        html2pdf().set({
+          margin: 10,
+          filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(results).save();
+      } catch (err) {
+        console.error('Errore generazione PDF', err);
+        alert('Errore durante la generazione del PDF. Riprova.');
+      }
+    });
+  }
+
   // calcola al caricamento con valore di default
   btn.click();
-</script is:inline >
+  </script>
