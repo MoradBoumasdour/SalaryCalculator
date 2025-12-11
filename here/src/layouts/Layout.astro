@@ -1,29 +1,71 @@
 ---
 import '../styles/global.css';
 ---
-
 <!doctype html>
 <html lang="it">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Salary Calculator</title>
-		<meta name="description" content="Calcolatore RAL → Netto con logica fiscale italiana semplificata" />
-		<style is:global>
-			@import '../styles/global.css';
-		</style>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Salary Calculator</title>
+
+    <!-- Inizializzazione tema prima del paint -->
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored || (prefersDark ? 'dark' : 'light');
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+          else document.documentElement.classList.remove('dark');
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100">
+    <slot />
+
+    <!-- Binding unico del toggle -->
+    <script>
+      (function () {
+        function bindThemeToggle() {
+          const btn = document.getElementById('theme-toggle');
+          const icon = document.getElementById('theme-toggle-icon');
+          if (!btn || !icon) return;
+
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const initial = stored || (prefersDark ? 'dark' : 'light');
+          const isDark = initial === 'dark';
+
+          btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+          icon.textContent = isDark ? '☀️' : '🌙';
+
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nowDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+            btn.setAttribute('aria-pressed', nowDark ? 'true' : 'false');
+            icon.textContent = nowDark ? '☀️' : '🌙';
+          });
+
+          // Rispetta cambi di preferenza sistema se l'utente non ha scelto
+          const mq = window.matchMedia('(prefers-color-scheme: dark)');
+          mq.addEventListener('change', (e) => {
+            if (localStorage.getItem('theme')) return;
+            if (e.matches) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+            const cur = document.documentElement.classList.contains('dark');
+            btn.setAttribute('aria-pressed', cur ? 'true' : 'false');
+            icon.textContent = cur ? '☀️' : '🌙';
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', bindThemeToggle);
+        } else {
+          bindThemeToggle();
+        }
+      })();
+    </script>
+  </body>
 </html>
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
