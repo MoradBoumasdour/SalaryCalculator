@@ -1,10 +1,10 @@
 ---
-import Calculator from './Calculator';
+import Calculator from '../components/Calculator.tsx';
 ---
 
 <section class="max-w-3xl mx-auto my-8 p-4">
   <header class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold">Calcolatore RAL → Netto</h1>
+    <h1 class="text-2xl font-semibold">Calcolatore RAL &rarr Netto</h1>
 
     <button
       id="theme-toggle"
@@ -22,7 +22,7 @@ import Calculator from './Calculator';
   </p>
 
   <!-- isola dinamica di react-->
-  <Calculator client:load />
+  <Calculator client:only="react" />
 
   <hr class="my-8 border-t border-gray-200 dark:border-gray-700" />
 </section>

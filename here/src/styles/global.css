@@ -37,11 +37,53 @@ body {
 }
 
 /* Minimal reset */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
 
 html, body {
   height: 100%;
   font-size: 16px;
+  background: #d2d2d2;
+}
+
+/* Sfondo titolo in dark mode */
+html.dark .bg-indigo-600:not(button):not(a) {
+  background: #2c2c2c !important;  /* stesso colore dello sfondo */
+}
+
+/* Bottone Calcola in dark mode */
+html.dark button.bg-indigo-600,
+html.dark a.bg-indigo-600 {
+  background: #2c2c2c !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* Link PDF in light mode - testo nero */
+a.bg-indigo-600 {
+  color: black !important;
+  text-decoration: none !important;
+}
+
+/* Bottone PDF in dark mode */
+html.dark .bg-white {
+  background: #2c2c2c !important;
+  color: white !important;
+}html.dark, html.dark body {
+  background: #2c2c2c;
+  color: white;
+}
+
+/* Dark mode text colors */
+html.dark .text-gray-600,
+html.dark .text-gray-700,
+html.dark .text-gray-800,
+html.dark .text-gray-900 {
+  color: white !important;
+}
+
+html.dark .text-indigo-600,
+html.dark .text-indigo-700 {
+  color: white !important;
 }
 
 /* Basic controls */
@@ -61,7 +103,6 @@ input, textarea, select {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
 }
-input[type="number"] { width: 200px; }
 
 /* Salary calculator specific styles */
 .calc {
